@@ -1,0 +1,58 @@
+#################################################################################
+#										                                        #
+# This is readonly file to help you to execute docker assignment		        #
+#  Prerequisites - centos 6 vm as a host machine having docker installed	    #
+# Author - poonam.davari.atwork@gmail.com					                    #
+#										                                        #
+#################################################################################
+
+Directory - docker-assignment
+Contents - apache-tomcat-7.0.73.tar.gz
+	       dockerfile
+           jdk-7u72-linux-x64.tar.gz
+           mongodb.repo
+
+Step 1 : clone/download the directory "docker-assignment" on your host machine
+and download tomcat and java tars in this directory using follwoing commands.
+
+ $wget http://apache.mirror.iphh.net/tomcat/tomcat-7/v7.0.73/bin/apache-tomcat-7.0.73.tar.gz
+ $wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u72-b14/jdk-7u72-linux-x64.tar.gz"
+
+-----------------------------------------------------------------------------------------------------------------------------
+Step 2: Open port 7080 on your host machine from which you are going to build docker image
+$sudo lokkit -p 7080:tcp
+
+-----------------------------------------------------------------------------------------------------------------------------
+Step 3: to build your own docker image from this dockerfile use following command
+
+$cd docker-assignment
+$docker build -t poonam/pmt .
+<here poonam/pmt could be any name that you want to give to your image>
+
+-----------------------------------------------------------------------------------------------------------------------------
+Step 4: once image gets succesfully built, use following command to build and start container
+
+$docker run -d -p 7080:8080 -t -i --name tomcat7 poonam/pmt  /usr/bin/sudo -u tomcat /usr/share/tomcat7/bin/catalina.sh run
+
+This command will start your container in daemon mode and your tomcat will be accessible on port 7080 from your host machine
+
+then try to access tomcat from browser using http://<hostmachineip>:7080
+-----------------------------------------------------------------------------------------------------------------------------
+Step 5: Verify running container
+
+$docker ps -a
+
+You should be able to see simmillar output as follows
+
+CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS                        PORTS                    NAMES
+389b1b839933        poonam/pmt          "/usr/bin/sudo -u to   36 minutes ago      Up 36 minutes                 0.0.0.0:7080->8080/tcp   tomcat7
+
+-----------------------------------------------------------------------------------------------------------------------------
+Step 6: Access container using following command
+
+$docker run -ti poonam/pmt /bin/bash
+
+This will give you bash prompt of the container and you will able to access the os
+
+-----------------------------------------------------------------------------------------------------------------------------
+<EOF>
